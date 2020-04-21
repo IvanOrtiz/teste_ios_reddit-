@@ -32,6 +32,8 @@ class FeedDetailsView: UIView {
         tableView.delegate = self
         tableView.dataSource = self
         
+        tableView.backgroundColor = .white
+        
         self.viewModels = viewModels
     }
 }
