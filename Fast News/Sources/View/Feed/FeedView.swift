@@ -31,7 +31,10 @@ class FeedView: UIView {
     
     //MARK: - Public Methods
     
-    func setup(with viewModels: [HotNewsViewModel], and delegate: FeedViewDelegate) {
+    
+    func setup(with delegate: FeedViewDelegate) {
+        tableView.estimatedRowHeight = 260.0
+        tableView.rowHeight = UITableView.automaticDimension
         
         tableView.register(UINib(nibName: "FeedCell", bundle: Bundle.main), forCellReuseIdentifier: "FeedCell")
         tableView.register(UINib(nibName: "LoadingCell", bundle: Bundle.main), forCellReuseIdentifier: "LoadingCell")
@@ -39,10 +42,12 @@ class FeedView: UIView {
         self.delegate = delegate
         tableView.delegate = self
         tableView.dataSource = self
-        
         tableView.backgroundColor = .white
-        
-        self.viewModels.append(contentsOf: viewModels) 
+        tableView.reloadData()
+    }
+    
+    func updateView(with viewModels: [HotNewsViewModel]) {
+        self.viewModels.append(contentsOf: viewModels)
     }
 }
 
@@ -70,15 +75,6 @@ extension FeedView: UITableViewDelegate, UITableViewDataSource {
         cell.setup(hotNewsViewModel: viewModels[indexPath.row])
         
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        if indexPath.row == viewModels.count
-        {
-            return 44.0
-        }        
-        return 260.0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

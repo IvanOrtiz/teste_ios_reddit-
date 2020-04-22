@@ -12,6 +12,9 @@ class FeedDetailsView: UIView {
     //MARK: - Properties
     
     @IBOutlet weak var tableView: UITableView!
+    
+    var commentIsLoaded = false
+    
     var viewModels: [TypeProtocol] = [TypeProtocol]() {
         didSet {
             tableView.reloadData()
@@ -28,6 +31,8 @@ class FeedDetailsView: UIView {
         tableView.register(UINib(nibName: "FeedCell", bundle: Bundle.main), forCellReuseIdentifier: "FeedCell")
         tableView.register(UINib(nibName: "CommentCell", bundle: Bundle.main), forCellReuseIdentifier: "CommentCell")
         
+        tableView.register(UINib(nibName: "LoadingCell", bundle: Bundle.main), forCellReuseIdentifier: "LoadingCell")
+        
         self.delegate = delegate
         tableView.delegate = self
         tableView.dataSource = self
@@ -35,11 +40,22 @@ class FeedDetailsView: UIView {
         tableView.backgroundColor = .white
         
         self.viewModels = viewModels
+
+    }
+    
+    func updateView(with viewModels: [TypeProtocol]) {
+        commentIsLoaded = true
+        self.viewModels = viewModels
     }
 }
 
 extension FeedDetailsView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if !commentIsLoaded
+        {
+            return viewModels.count + 1
+        }
+        
         return viewModels.count
     }
     
@@ -48,6 +64,14 @@ extension FeedDetailsView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if indexPath.row == 1 && !commentIsLoaded
+        {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "LoadingCell", for: indexPath) as? LoadingCell else { fatalError("Cell is not of type FeedCell!") }
+            cell.startLoading()
+            return cell
+        }
+        
         let viewModel = viewModels[indexPath.row]
         
         switch viewModel.type {
@@ -65,16 +89,7 @@ extension FeedDetailsView: UITableViewDelegate, UITableViewDataSource {
             return cell
         }
     }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch viewModels[indexPath.row].type {
-        case .hotNews:
-            return 400.0
-        default:
-            return 100.0
-        }
-    }
-    
+        
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let viewModel = viewModels[indexPath.row]
         
@@ -88,3 +103,4 @@ extension FeedDetailsView: UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
+

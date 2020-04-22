@@ -18,6 +18,7 @@ class FeedCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var commentsLabel: UILabel!
     @IBOutlet weak var scoreLabel: UILabel!
+    @IBOutlet weak var imageHeightConstraint: NSLayoutConstraint!
     
     //MARK: - Public Methods
     
@@ -38,5 +39,7 @@ class FeedCell: UITableViewCell {
         titleLabel.text = hotNewsViewModel.title
         commentsLabel.text = hotNewsViewModel.comments
         scoreLabel.text = hotNewsViewModel.score
+        
+        imageHeightConstraint.constant = 277
     }
 }

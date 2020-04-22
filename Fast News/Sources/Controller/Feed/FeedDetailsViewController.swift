@@ -10,7 +10,6 @@ import UIKit
 class FeedDetailsViewController: UIViewController {
     
     //MARK: - Properties
-    
     var hotNewsViewModel: HotNewsViewModel?
     
     var comments: [Comment] = [Comment]() {
@@ -24,8 +23,7 @@ class FeedDetailsViewController: UIViewController {
             _ = comments.map { (comment) in
                 viewModels.append(CommentViewModel(comment: comment))
             }
-            
-            self.mainView.setup(with: viewModels, and: self)
+            self.mainView.updateView(with: viewModels)
         }
     }
     
@@ -36,11 +34,16 @@ class FeedDetailsViewController: UIViewController {
         return view
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.largeTitleDisplayMode = .never
+        
+        if let hotNews = hotNewsViewModel {
+            var viewModels: [TypeProtocol] = [TypeProtocol]()
+            viewModels.append(hotNews)
+            self.mainView.setup(with: viewModels, and: self)
+        }
         
         HotNewsProvider.shared.hotNewsComments(id: hotNewsViewModel?.id ?? "") { (completion) in
             do {

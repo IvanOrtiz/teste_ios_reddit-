@@ -22,8 +22,7 @@ class FeedViewController: UIViewController {
             _ = hotNews.map { (news) in
                 viewModels.append(HotNewsViewModel(hotNews: news))
             }
-            
-            self.mainView.setup(with: viewModels, and: self)
+            self.mainView.updateView(with: viewModels)
         }
     }
     
@@ -39,7 +38,7 @@ class FeedViewController: UIViewController {
         
         navigationItem.title = "Fast News"
         navigationController?.navigationBar.prefersLargeTitles = true
-        loadItens()
+        self.mainView.setup(with: self)
         
     }
     
@@ -70,3 +69,4 @@ extension FeedViewController: FeedViewDelegate {
         }
     }
 }
+
